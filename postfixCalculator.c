@@ -23,11 +23,21 @@ int main() {
     instructions();
 
     int expressionSize;
+    printf("Enter the size of the expression: ");
     scanf("%d", &expressionSize);
 
-    char expression[(expressionSize + 1) * 2];
+    char expression[expressionSize + 1];
     fflush(stdin);
-    scanf("%[^\n]", expression);
+    //I have to consume the newline character from the scanf above
+    //otherwise, it will be added as the first character for the scanf below in the for loop..
+    //So every expression will start with a newline character and I don't want that.
+
+    printf("Enter the expression:");
+    for(int i=0; i<expressionSize; i++){
+        scanf("%c", &expression[i]);
+    }
+    expression[expressionSize]='\0';
+
 
     int spaceIndex = -1;
     stackNode* top = NULL;
@@ -39,12 +49,14 @@ int main() {
             case '-':
             case '/':
             case '*':
-                operand2 = pop(&top);
-                operand1 = pop(&top);
-                result = doOperation(expression[i], operand1, operand2);
-                push(result, &top);
-                i++;
-                spaceIndex = i;
+                if(top!=NULL && top->next!=NULL){
+                    operand2 = pop(&top);
+                    operand1 = pop(&top);
+                    result = doOperation(expression[i], operand1, operand2);
+                    push(result, &top);
+                    i++;
+                    spaceIndex = i;
+                }
                 break;
 
             default:
@@ -60,12 +72,13 @@ int main() {
     }
 
     printf("%f", result);
+    getchar();
     return 0;
 }
 
 void instructions() {
     printf("Enter the size of the expression, including all spaces and operands, followed by the expression itself.\n");
-    printf("Ensure each number is separated from operators by a single space.\nExample: 9 3 4 * 8 + 4 / -\n");
+    printf("Ensure each number is separated from operators by a single space.\nExample:9 3 4 * 8 + 4 / -\n");
 }
 
 double doOperation(char operatorr, double operand1, double operand2) {
