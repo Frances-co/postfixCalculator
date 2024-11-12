@@ -27,7 +27,10 @@ int main() {
     scanf("%d", &expressionSize);
 
     char expression[expressionSize + 1];
-    fflush(stdin);
+    //fflush(stdin);
+    getchar();
+    //that's better cuz fflush isn't standard and won't work across
+    //all compilers.
     //I have to consume the newline character from the scanf above
     //otherwise, it will be added as the first character for the scanf below in the for loop..
     //So every expression will start with a newline character and I don't want that.
